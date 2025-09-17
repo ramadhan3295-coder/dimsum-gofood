@@ -198,10 +198,10 @@ function updateRekap() {
     totalAll += parseFloat(row.querySelector("td[data-total]")?.getAttribute("data-total")) || 0;
   });
 
-  document.getElementById("totalBox").textContent = "Total Box Terjual: " + totalBox.toLocaleString();
-  document.getElementById("totalOnline").textContent = "Total Profit Online: Rp " + totalOnline.toLocaleString();
-  document.getElementById("totalOffline").textContent = "Total Profit Offline: Rp " + totalOffline.toLocaleString();
-  document.getElementById("totalAll").textContent = "Total Profit Keseluruhan: Rp " + totalAll.toLocaleString();
+  document.getElementById("totalBox").textContent = totalBox.toLocaleString();
+  document.getElementById("totalOnline").textContent = totalOnline.toLocaleString();
+  document.getElementById("totalOffline").textContent = totalOffline.toLocaleString();
+  document.getElementById("totalAll").textContent = totalAll.toLocaleString();
 
   // simpan rekap juga
   saveToLocalStorage();
@@ -279,6 +279,7 @@ function loadFromLocalStorage() {
     });
   }
 
+// di loadFromLocalStorage():
 if (recapStored) {
   const recap = JSON.parse(recapStored);
   document.getElementById("totalBox").textContent = (recap.totalBox || 0).toLocaleString();
