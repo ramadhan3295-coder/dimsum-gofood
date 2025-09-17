@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kalkulator Profit GoFood</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 10px; background: #f7f7f7; }
+    h2 { text-align: center; margin-bottom: 15px; }
+    .container { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    label { display: block; margin: 8px 0 4px; font-size: 14px; }
+    select, input, button {
+      width: 100%; padding: 8px; margin-bottom: 12px;
+      border: 1px solid #ccc; border-radius: 6px; font-size: 14px;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+    table, th, td { border: 1px solid #ddd; }
+    th, td { padding: 6px; text-align: center; }
+    th { background: #f0f0f0; }
+    .actions button { width: auto; padding: 4px 8px; margin: 2px; font-size: 12px; }
+    #rekap { margin-top: 15px; padding: 12px; background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); font-size: 14px; }
+    #rekap span { display: block; margin: 4px 0; }
+
+    button {
+  cursor: pointer;
+}
+
+.btn-tambah {
+  background: #4CAF50;      /* hijau */
+  color: white;
+  font-weight: bold;
+}
+
+.btn-export {
+  background: #2196F3;      /* biru */
+  color: white;
+  font-weight: bold;
+}
+
+.btn-hapus {
+  background: #f44336;      /* merah */
+  color: white;
+  font-weight: bold;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+  </style>
+</head>
+<body>
+  <h2>Kalkulator Profit GoFood</h2>
+  <div class="container">
+    <label for="paket">Paket</label>
+    <select id="paket">
+      <option value="">-- Pilih Paket --</option>
+      <option data-harga="19500" data-modal="11500">Dimsum medium frozen 5 pcs</option>
+      <option data-harga="32500" data-modal="22000">Dimsum medium frozen 10 pcs</option>
+      <option data-harga="57500" data-modal="42000">Dimsum medium frozen 20 pcs</option>
+      <option data-harga="67500" data-modal="50000">Dimsum medium frozen 25 pcs</option>
+      <option data-harga="24000" data-modal="15000">Dimsum medium mentai 5 pcs</option>
+      <option data-harga="42500" data-modal="30000">Dimsum medium mentai 10 pcs</option>
+      <option data-harga="77500" data-modal="58000">Dimsum medium mentai 20 pcs</option>
+      <option data-harga="96000" data-modal="72500">Dimsum medium mentai 25 pcs</option>
+      <option data-harga="21000" data-modal="12500">Dimsum medium original 5 pcs</option>
+      <option data-harga="36500" data-modal="25000">Dimsum medium original 10 pcs</option>
+      <option data-harga="67500" data-modal="50000">Dimsum medium original 20 pcs</option>
+      <option data-harga="83500" data-modal="62500">Dimsum medium original 25 pcs</option>
+    </select>
+
+    <label for="jumlah">Jumlah Box</label>
+    <input type="number" id="jumlah" value="1" min="1">
+
+    <label for="harga">Harga Jual GoFood</label>
+    <input type="number" id="harga" readonly>
+
+    <label for="komisi">Komisi (%)</label>
+    <input type="number" id="komisi" value="20">
+
+    <label for="fee">Fee per Transaksi</label>
+    <input type="number" id="fee" value="1000">
+
+    <label for="modal">Modal Awal</label>
+    <input type="number" id="modal" readonly>
+
+    <button class="btn-tambah" onclick="tambahData()">Tambah Data</button>
+    <button class="btn-export" onclick="exportExcel()">Export Excel</button>
+    <button class="btn-hapus" onclick="clearLocalStorage()">Hapus Semua Data</button>
+  </div>
+
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Paket</th>
+        <th>Jumlah Box</th>
+        <th>Harga Jual</th>
+        <th>Komisi</th>
+        <th>Fee</th>
+        <th>Total Potongan</th>
+        <th>Omzet Bersih</th>
+        <th>Modal Awal</th>
+        <th>Profit Online</th>
+        <th>Profit Offline</th>
+        <th>Total Profit</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="rekap">
+    <strong>Rekap Total:</strong>
+    <span id="totalBox">Total Box Terjual: 0</span>
+    <span id="totalOnline">Total Profit Online: Rp 0</span>
+    <span id="totalOffline">Total Profit Offline: Rp 0</span>
+    <span id="totalAll">Total Profit Keseluruhan: Rp 0</span>
+  </div>
+
+<script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/sw.js")
+    .then(() => console.log("Service Worker terdaftar"))
+    .catch(err => console.log("SW gagal:", err));
+}
+</script>
+</body>
+</html>
