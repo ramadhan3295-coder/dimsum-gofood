@@ -49,6 +49,20 @@
 button:hover {
   opacity: 0.85;
 }
+
+/* Warna khusus untuk kolom Jumlah Box */
+.highlight-box {
+  background: #fff9c4;   /* kuning muda */
+  border: 2px solid #fbc02d;
+  font-weight: bold;
+}
+
+/* Saat fokus */
+.highlight-box:focus {
+  background: #fff59d;   /* kuning lebih terang */
+  outline: none;
+}
+
   </style>
 </head>
 <body>
@@ -72,7 +86,7 @@ button:hover {
     </select>
 
     <label for="jumlah">Jumlah Box</label>
-    <input type="number" id="jumlah" value="1" min="1">
+    <input type="number" id="jumlah" class="highlight-box" value="1" min="1">
 
     <label for="harga">Harga Jual GoFood</label>
     <input type="number" id="harga" readonly>
