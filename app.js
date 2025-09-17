@@ -36,7 +36,7 @@ function tambahData() {
   const today = new Date();
   const tanggal = today.toISOString().split("T")[0];
 
-  const paket = paketSelect.value;
+  const paket = paketSelect.options[paketSelect.selectedIndex].text;
   const jumlah = parseInt(document.getElementById("jumlah").value) || 1;
   const hargaPerBox = parseFloat(hargaInput.value) || 0;
   const harga = hargaPerBox * jumlah;
@@ -49,9 +49,9 @@ function tambahData() {
     alert("Harap pilih paket.");
     return;
   }
-
-  const potonganKomisi = (komisi / 100) * (harga / jumlah); // per box
-  const totalPotongan = (potonganKomisi + fee) * jumlah;
+  // di tambahData()
+  const potonganKomisi = (komisi / 100) * harga;  
+  const totalPotongan = potonganKomisi + fee;
   const omzetBersih = harga - totalPotongan;
   const profitOnline = omzetBersih - modal;
   const profitOffline = (profitOfflineData[paket] || 0) * jumlah;
@@ -127,7 +127,7 @@ function saveEdit() {
   if (!currentEditRow) return;
 
   const editPaketEl = document.getElementById("editPaket");
-  const paket = editPaketEl.value;
+  const paket = editPaketEl.options[editPaketEl.selectedIndex].text;
   const jumlah = parseInt(document.getElementById("editJumlah").value) || 1;
   const komisi = parseFloat(document.getElementById("editKomisi").value) || 0;
   const fee = parseFloat(document.getElementById("editFee").value) || 0;
@@ -139,8 +139,8 @@ function saveEdit() {
 
   const harga = hargaPerBox * jumlah;
   const modal = modalPerBox * jumlah;
-  const potonganKomisi = (komisi / 100) * (harga / jumlah);
-  const totalPotongan = (potonganKomisi + fee) * jumlah;
+  const potonganKomisi = (komisi / 100) * harga;
+  const totalPotongan = potonganKomisi + fee;
   const omzetBersih = harga - totalPotongan;
   const profitOnline = omzetBersih - modal;
   const profitOffline = (profitOfflineData[paket] || 0) * jumlah;
@@ -203,7 +203,6 @@ function updateRekap() {
   document.getElementById("totalOffline").textContent = totalOffline.toLocaleString();
   document.getElementById("totalAll").textContent = totalAll.toLocaleString();
 
-  // simpan rekap juga
   saveToLocalStorage();
 }
 
@@ -297,10 +296,10 @@ function clearLocalStorage() {
     localStorage.removeItem("gofoodData");
     localStorage.removeItem("gofoodRecap");
     document.querySelector("#dataTable tbody").innerHTML = "";
-    document.getElementById("totalBox").textContent = "Total Box Terjual: 0";
-    document.getElementById("totalOnline").textContent = "Total Profit Online: Rp 0";
-    document.getElementById("totalOffline").textContent = "Total Profit Offline: Rp 0";
-    document.getElementById("totalAll").textContent = "Total Profit Keseluruhan: Rp 0";
+    document.getElementById("totalBox").textContent = "0";
+    document.getElementById("totalOnline").textContent = "0";
+    document.getElementById("totalOffline").textContent = "0";
+    document.getElementById("totalAll").textContent = "0";
   }
 }
 
@@ -309,27 +308,33 @@ function exportExcel() {
   const table = document.getElementById("dataTable");
   const clone = table.cloneNode(true);
 
-  // hapus kolom aksi (last cell) di semua baris
+  // hapus kolom aksi
   clone.querySelectorAll("tr").forEach(row => {
     if (row.lastElementChild) row.removeChild(row.lastElementChild);
   });
 
   const sheet = XLSX.utils.table_to_sheet(clone);
 
-  // ambil total dari rekap (yang sudah formatted string)
-  const totalBox = document.getElementById("totalBox").textContent.replace("Total Box Terjual: ", "");
-  const totalOnline = document.getElementById("totalOnline").textContent.replace("Total Profit Online: Rp ", "");
-  const totalOffline = document.getElementById("totalOffline").textContent.replace("Total Profit Offline: Rp ", "");
-  const totalAll = document.getElementById("totalAll").textContent.replace("Total Profit Keseluruhan: Rp ", "");
+  // ambil total (angka, bukan string berlabel)
+  const totalBox = document.getElementById("totalBox").textContent;
+  const totalOnline = document.getElementById("totalOnline").textContent;
+  const totalOffline = document.getElementById("totalOffline").textContent;
+  const totalAll = document.getElementById("totalAll").textContent;
 
-  // tempatkan TOTAL beberapa baris setelah terakhir
   const range = XLSX.utils.decode_range(sheet["!ref"]);
-  const lastRow = range.e.r + 2; // 1 baris kosong lalu total
+  const lastRow = range.e.r + 2;
 
-  XLSX.utils.sheet_add_aoa(sheet, [
-    [],
-    ["TOTAL", "", totalBox, "", "", "", "", "", "", `Rp ${totalOnline}`, `Rp ${totalOffline}`, `Rp ${totalAll}`]
-  ], { origin: `A${lastRow}` });
+  // hitung jumlah kolom otomatis
+  const colCount = clone.rows[0].cells.length;
+
+  const rowData = Array(colCount).fill("");
+  rowData[0] = "TOTAL";
+  rowData[2] = totalBox;
+  rowData[colCount - 3] = totalOnline;   // tanpa Rp
+  rowData[colCount - 2] = totalOffline;
+  rowData[colCount - 1] = totalAll;
+
+  XLSX.utils.sheet_add_aoa(sheet, [[], rowData], { origin: `A${lastRow}` });
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, sheet, "Profit");
