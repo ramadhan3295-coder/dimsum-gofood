@@ -279,12 +279,12 @@ function loadFromLocalStorage() {
     });
   }
 
-  if (recapStored) {
-    const recap = JSON.parse(recapStored);
-    document.getElementById("totalBox").textContent = "Total Box Terjual: " + (recap.totalBox || 0).toLocaleString();
-    document.getElementById("totalOnline").textContent = "Total Profit Online: Rp " + (recap.totalOnline || 0).toLocaleString();
-    document.getElementById("totalOffline").textContent = "Total Profit Offline: Rp " + (recap.totalOffline || 0).toLocaleString();
-    document.getElementById("totalAll").textContent = "Total Profit Keseluruhan: Rp " + (recap.totalAll || 0).toLocaleString();
+if (recapStored) {
+  const recap = JSON.parse(recapStored);
+  document.getElementById("totalBox").textContent = (recap.totalBox || 0).toLocaleString();
+  document.getElementById("totalOnline").textContent = (recap.totalOnline || 0).toLocaleString();
+  document.getElementById("totalOffline").textContent = (recap.totalOffline || 0).toLocaleString();
+  document.getElementById("totalAll").textContent = (recap.totalAll || 0).toLocaleString();
   } else {
     updateRekap(); // hitung ulang jika belum ada recap tersimpan
   }
