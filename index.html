@@ -63,6 +63,46 @@ button:hover {
   outline: none;
 }
 
+/* Modal edit */
+.modal {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal .modal-content {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  width: 360px;
+  max-width: 92%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.modal .modal-content h3 { margin: 0 0 8px; text-align: left; }
+.modal .modal-content label { display:block; margin-top:8px; font-size:13px; }
+.modal .modal-content input,
+.modal .modal-content select { width:100%; padding:8px; margin-top:4px; box-sizing:border-box; }
+
+/* tombol di modal */
+.modal .actions { text-align:right; margin-top:12px; }
+.modal .actions button { padding:6px 10px; margin-left:8px; border-radius:6px; }
+
+/* highlight field jumlah (opsional) */
+.highlight-box {
+  background: #fff9c4;
+  border: 2px solid #fbc02d;
+  font-weight: bold;
+}
+.highlight-box:focus {
+  background: #fff59d;
+  outline: none;
+}
+
   </style>
 </head>
 <body>
@@ -133,6 +173,30 @@ button:hover {
     <span id="totalOffline">Total Profit Offline: Rp 0</span>
     <span id="totalAll">Total Profit Keseluruhan: Rp 0</span>
   </div>
+
+  <!-- Edit Modal -->
+<div id="editModal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true">
+    <h3>Edit Baris</h3>
+
+    <label for="editPaket">Paket</label>
+    <select id="editPaket"></select>
+
+    <label for="editJumlah">Jumlah Box</label>
+    <input id="editJumlah" type="number" min="1" class="highlight-box">
+
+    <label for="editKomisi">Komisi (%)</label>
+    <input id="editKomisi" type="number" min="0">
+
+    <label for="editFee">Fee per Transaksi</label>
+    <input id="editFee" type="number" min="0">
+
+    <div class="actions">
+      <button type="button" onclick="cancelEdit()">Batal</button>
+      <button type="button" onclick="saveEdit()" class="btn-tambah">Simpan</button>
+    </div>
+  </div>
+</div>
 
 <script src="app.js"></script>
 <script>
