@@ -85,12 +85,13 @@
     updateRekap();
   }
 
-  function hapusRow(btn) {
-    btn.closest("tr").remove();
-    updateRekap();
-  }
+function hapusRow(btn) {
+  btn.closest("tr").remove();
+  updateRekap();          // hitung ulang total
+  saveToLocalStorage();   // simpan perubahan
+}
 
- function updateRekap() {
+function updateRekap() {
   let totalBox = 0;
   let totalOnline = 0;
   let totalOffline = 0;
@@ -110,7 +111,6 @@
     totalAll += total;
   });
 
-  // tampilkan di rekap dengan format Rupiah
   document.getElementById("totalBox").textContent =
     "Total Box Terjual: " + totalBox.toLocaleString();
 
@@ -123,7 +123,7 @@
   document.getElementById("totalAll").textContent =
     "Total Profit Keseluruhan: Rp " + totalAll.toLocaleString();
 
-  // simpan juga ke localStorage
+  // simpan nilai terbaru ke localStorage
   saveToLocalStorage();
 }
   
