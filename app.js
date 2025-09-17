@@ -90,23 +90,41 @@
     updateRekap();
   }
 
-  function updateRekap() {
-    let totalOnline = 0, totalOffline = 0, totalAll = 0, totalBox = 0;
-    const rows = document.querySelectorAll("#dataTable tbody tr");
+ function updateRekap() {
+  let totalBox = 0;
+  let totalOnline = 0;
+  let totalOffline = 0;
+  let totalAll = 0;
 
-    rows.forEach(row => {
-      totalBox += parseInt(row.querySelector("td[data-box]").getAttribute("data-box")) || 0;
-      totalOnline += parseFloat(row.querySelector("td[data-online]").getAttribute("data-online")) || 0;
-      totalOffline += parseFloat(row.querySelector("td[data-offline]").getAttribute("data-offline")) || 0;
-      totalAll += parseFloat(row.querySelector("td[data-total]").getAttribute("data-total")) || 0;
-    });
+  const rows = document.querySelectorAll("#dataTable tbody tr");
 
-  document.getElementById("totalBox").textContent = "Total Box Terjual: " + totalBox;
-  document.getElementById("totalOnline").textContent = "Total Profit Online: Rp " + totalOnline.toLocaleString();
-  document.getElementById("totalOffline").textContent = "Total Profit Offline: Rp " + totalOffline.toLocaleString();
-  document.getElementById("totalAll").textContent = "Total Profit Keseluruhan: Rp " + totalAll.toLocaleString();
+  rows.forEach(row => {
+    const box = parseInt(row.querySelector("td[data-box]")?.getAttribute("data-box")) || 0;
+    const online = parseFloat(row.querySelector("td[data-online]")?.getAttribute("data-online")) || 0;
+    const offline = parseFloat(row.querySelector("td[data-offline]")?.getAttribute("data-offline")) || 0;
+    const total = parseFloat(row.querySelector("td[data-total]")?.getAttribute("data-total")) || 0;
 
-  saveToLocalStorage(); // ✅ simpan setiap kali rekap selesai
+    totalBox += box;
+    totalOnline += online;
+    totalOffline += offline;
+    totalAll += total;
+  });
+
+  // tampilkan di rekap dengan format Rupiah
+  document.getElementById("totalBox").textContent =
+    "Total Box Terjual: " + totalBox.toLocaleString();
+
+  document.getElementById("totalOnline").textContent =
+    "Total Profit Online: Rp " + totalOnline.toLocaleString();
+
+  document.getElementById("totalOffline").textContent =
+    "Total Profit Offline: Rp " + totalOffline.toLocaleString();
+
+  document.getElementById("totalAll").textContent =
+    "Total Profit Keseluruhan: Rp " + totalAll.toLocaleString();
+
+  // simpan juga ke localStorage
+  saveToLocalStorage();
 }
   
 // ====== SIMPAN & AMBIL DATA DARI LOCAL STORAGE ======
